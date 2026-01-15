@@ -1,0 +1,99 @@
+# docker-compose.yml
+version: '3.9'
+
+services:
+  api:
+    build: .
+    container_name: cart_api
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+      - product-service
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/cartdb
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+      PRODUCT_SERVICE_URL: http://product-service:8000
+      CART_TTL_SECONDS: 900
+    volumes:
+      - ./:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  worker:
+    build: .
+    container_name: cart_worker
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/cartdb
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    command: celery -A app.celery_worker.celery_app worker --loglevel=info --concurrency=4
+
+  beat:
+    build: .
+    container_name: cart_beat
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/cartdb
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    command: celery -A app.celery_worker.celery_app beat --loglevel=info
+
+  flower:
+    image: mher/flower:latest
+    container_name: cart_flower
+    depends_on:
+      - redis
+      - worker
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+    ports:
+      - "5555:5555"
+
+  redis:
+    image: redis:7
+    container_name: cart_redis
+    ports:
+      - "6379:6379"
+      - "8003:8003"  # unused but reserved
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: redisinsight
+    environment:
+      - RI_HOST=0.0.0.0
+    ports:
+      - "8002:8001"   # host:container (RedisInsight listens on 8001 in container)
+
+  postgres:
+    image: postgres:15
+    container_name: cart_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cartdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  product-service:
+    build:
+      context: ./app/product_service
+    container_name: product_service
+    ports:
+      - "8001:8000"
+    environment:
+      - SOME_SEED=1
+
+volumes:
+  pgdata:
