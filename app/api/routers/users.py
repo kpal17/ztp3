@@ -1,4 +1,3 @@
-# app/api/routers/users.py
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.data.database import get_db

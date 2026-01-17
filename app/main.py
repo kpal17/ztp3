@@ -14,23 +14,23 @@ from app.data.models.cart_item import CartItemModel
 from app.data.models.order import OrderModel
 
 print("=" * 80)
-print("🔧 INITIALIZING DATABASE...")
-print(f"📦 Models registered in Base.metadata: {list(Base.metadata.tables.keys())}")
+print("INICJUJE BAZE DANYCH...")
+print(f"Models registered in Base.metadata: {list(Base.metadata.tables.keys())}")
 print("=" * 80)
 
 try:
     Base.metadata.create_all(bind=engine)
-    print("✅ DATABASE TABLES CREATED SUCCESSFULLY")
+    print("POMYSLNIE UTWORZONO TABELE:")
     print("=" * 80)
 except Exception as e:
-    print(f"❌ FAILED TO CREATE TABLES: {e}")
+    print(f"COS NIE TAK Z TABELAMI: {e}")
     print("=" * 80)
     raise
 
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="Cart Service",
+        title="ZTP 3 - CART SERVICE",
         version="1.0.0",
     )
 

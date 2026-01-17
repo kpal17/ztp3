@@ -1,27 +1,20 @@
-# app/api/routers/orders.py
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-
 from app.data.database import get_db
 from app.domain.schemas import OrderCreate, OrderOut
 from app.services.order_service import OrderService
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
-
 def get_service(db: Session):
     return OrderService(db)
-
 
 @router.post("/", response_model=OrderOut, status_code=201)
 def create_order(
     payload: OrderCreate,
     db: Session = Depends(get_db),
 ):
-    """
-    Tworzy zamówienie z sfinalizowanego koszyka.
-    Wysyła powiadomienie asynchronicznie.
-    """
+    #tworzy order ze sfinalizowanego koszyka i wysyla async notification
     svc = get_service(db)
     try:
         return svc.create_order_from_cart(payload.cart_id, payload.user_id)
@@ -37,9 +30,7 @@ def get_order(
     user_id: int = Query(...),
     db: Session = Depends(get_db),
 ):
-    """
-    Pobiera szczegóły zamówienia.
-    """
+    #pobierz szczegoly zamowienia
     svc = get_service(db)
     try:
         return svc.get_order(order_id, user_id)

@@ -1,7 +1,5 @@
-#app/appi/routers/carts.py
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-
 from app.data.database import get_db
 from app.domain.schemas import (
     CreateCartIn,
