@@ -11,13 +11,13 @@ celery_app = Celery(
     backend=RESULT_BACKEND,
 )
 
-# WAŻNE: Explicite importuj taski, żeby Celery je zarejestrował
+#jawny import zeby celery je zarejestrowal
 celery_app.conf.imports = (
     "app.tasks.expire",
     "app.services.notification_service",
 )
 
-# Konfiguracja beat schedule
+#CELERY BEAT SCHEDULE, harmonogram cron
 celery_app.conf.beat_schedule = {
     "expire-carts-every-minute": {
         "task": "app.tasks.expire.expire_carts_task",

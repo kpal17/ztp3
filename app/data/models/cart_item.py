@@ -1,4 +1,3 @@
-#app/data/models/cart_item.py
 from sqlalchemy import Column, Integer, ForeignKey, Numeric
 from sqlalchemy.orm import relationship
 

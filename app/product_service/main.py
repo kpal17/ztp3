@@ -1,8 +1,6 @@
-# product_service/main.py
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI(title="Product Service (dev mock)")
-
 
 PRODUCTS = {
     1: {"id": 1, "name": "Keyboard", "price": 199.99},

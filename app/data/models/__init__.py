@@ -1,7 +1,5 @@
-# app/data/models/__init__.py
-"""
-Import wszystkich modeli, żeby SQLAlchemy je zarejestrował w Base.metadata
-"""
+#import wszystkich modeliz zeby SQLAlchemy je zarejestrowal w base metadata
+
 from app.data.models.user import UserModel
 from app.data.models.cart import CartModel
 from app.data.models.cart_item import CartItemModel

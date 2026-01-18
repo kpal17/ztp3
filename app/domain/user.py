@@ -1,4 +1,3 @@
-#app/domain/user.py
 class User:
     def __init__(self, id: int, name: str):
         self.id = id

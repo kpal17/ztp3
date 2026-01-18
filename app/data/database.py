@@ -1,4 +1,3 @@
-# app/data/database.py
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from app.utils.settings import DATABASE_URL

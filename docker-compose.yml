@@ -72,7 +72,7 @@ services:
     environment:
       - RI_HOST=0.0.0.0
     ports:
-      - "8002:8001"   # host:container (RedisInsight listens on 8001 in container)
+      - "8002:5540"   # host:container
 
   postgres:
     image: postgres:15

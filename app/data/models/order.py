@@ -1,9 +1,7 @@
-# app/data/models/order.py
 from sqlalchemy import Column, Integer, ForeignKey, String, DateTime, Numeric
 from datetime import datetime, timezone
 
 from app.data.database import Base
-
 
 class OrderModel(Base):
     __tablename__ = "orders"

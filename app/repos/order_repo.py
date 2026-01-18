@@ -1,4 +1,3 @@
-# app/repos/order_repo.py
 from sqlalchemy.orm import Session
 from app.data.models.order import OrderModel
 

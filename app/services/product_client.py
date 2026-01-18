@@ -17,7 +17,6 @@ def http_retry():
         retry=retry_if_exception_type(RequestException),
     )
 
-
 class ProductClient:
     def __init__(self, base_url: str | None = None, timeout: int = 2):
         self.base_url = (base_url or PRODUCT_SERVICE_URL).rstrip("/")

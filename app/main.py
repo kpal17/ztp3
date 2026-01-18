@@ -7,7 +7,7 @@ import uvicorn
 
 logger = get_logger(__name__)
 
-# IMPORT WSZYSTKICH MODELI NA POCZĄTKU (PRZED JAKIMKOLWIEK CREATE_ALL)
+# IMPORT WSZYSTKICH MODELI NA POCZATKU (PRZED JAKIMKOLWIEK CREATE_ALL)
 from app.data.models.user import UserModel
 from app.data.models.cart import CartModel
 from app.data.models.cart_item import CartItemModel

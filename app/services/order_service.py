@@ -2,7 +2,6 @@
 from decimal import Decimal
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-
 from app.data.models.order import OrderModel
 from app.data.models.cart import CartModel
 from app.data.models.cart_item import CartItemModel
@@ -11,7 +10,6 @@ from app.services.notification_service import NotificationService
 from app.utils.logging import get_logger
 
 logger = get_logger(__name__)
-
 
 class OrderService:
     """
@@ -26,12 +24,11 @@ class OrderService:
 
     def create_order_from_cart(self, cart_id: int, user_id: int):
         """
-        Use Case: Tworzenie zamówienia z koszyka.
-
-        1. Weryfikuje, czy koszyk jest sfinalizowany
-        2. Oblicza total
-        3. Tworzy zamówienie
-        4. Wysyła powiadomienie (async)
+        Use Case: Tworzenie zamowienia z koszyka
+        1 Weryfikuje czy koszyk jest sfinalizowany
+        2 Oblicza total
+        3 Tworzy zamowienie
+        4 Wysyla powiadomienie (async)
         """
         # Pobierz koszyk
         cart = self.db.execute(
@@ -42,10 +39,10 @@ class OrderService:
             raise ValueError("Koszyk nie istnieje")
 
         if cart.user_id != user_id:
-            raise PermissionError("Brak dostępu do koszyka")
+            raise PermissionError("Brak dostepu do koszyka")
 
         if cart.status != "FINALIZED":
-            raise ValueError("Koszyk musi być sfinalizowany przed utworzeniem zamówienia")
+            raise ValueError("Koszyk musi być sfinalizowany przed utworzeniem zamowienia")
 
         # Oblicz total
         items = self.db.execute(
@@ -57,7 +54,7 @@ class OrderService:
         if total == Decimal("0.00"):
             raise ValueError("Koszyk jest pusty")
 
-        # Utwórz zamówienie
+        # Utworz zamowienie
         order = OrderModel(
             cart_id=cart_id,
             user_id=user_id,
@@ -69,7 +66,7 @@ class OrderService:
 
         logger.info(f"Order {created_order.id} created from cart {cart_id}")
 
-        # Wyślij powiadomienie asynchronicznie
+        #Wyslij powiadomienie asynchronicznie
         self.notification_service.send_order_notification(user_id, created_order.id)
 
         return {
@@ -82,16 +79,14 @@ class OrderService:
         }
 
     def get_order(self, order_id: int, user_id: int):
-        """
-        Use Case: Pobranie zamówienia (Query).
-        """
+        #pobieranie zamowienia (query)
         order = self.repo.get_order(order_id)
 
         if not order:
-            raise ValueError("Zamówienie nie istnieje")
+            raise ValueError("Zamowienie nie istnieje")
 
         if order.user_id != user_id:
-            raise PermissionError("Brak dostępu do zamówienia")
+            raise PermissionError("Brak dostepu do zamowienia")
 
         return {
             "id": order.id,

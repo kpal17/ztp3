@@ -12,7 +12,6 @@ from app.services.lock_service import LockService
 
 router = APIRouter(prefix="/carts", tags=["carts"])
 
-
 def get_service(db: Session):
     return CartService(
         db=db,
@@ -20,12 +19,10 @@ def get_service(db: Session):
         lock_service=LockService(),
     )
 
-
 @router.post("/", response_model=CartOut)
 def create_cart(payload: CreateCartIn, db: Session = Depends(get_db)):
     svc = get_service(db)
     return svc.create_cart(payload.user_id)
-
 
 @router.get("/{cart_id}", response_model=CartOut)
 def get_cart(
@@ -38,7 +35,6 @@ def get_cart(
     if not cart:
         raise HTTPException(status_code=404, detail="Koszyk nie znaleziony")
     return cart
-
 
 @router.post("/{cart_id}/items", response_model=CartOut)
 def add_item(
@@ -60,7 +56,6 @@ def add_item(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
 @router.delete("/{cart_id}/items/{product_id}", response_model=CartOut)
 def remove_item(
     cart_id: int,
@@ -75,7 +70,6 @@ def remove_item(
         raise HTTPException(status_code=403, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
 
 @router.post("/{cart_id}/finalize", response_model=CartOut)
 def finalize_cart(
